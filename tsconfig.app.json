@@ -1,13 +1,13 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    // suas opções aqui
+    // suas opções aqui (remova esta linha)
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "src/shims-vue.d.ts" // Adicione esta linha
+    "src/shims-vue.d.ts" 
   ],
   "exclude": [
     "node_modules",
