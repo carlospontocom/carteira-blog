@@ -19,7 +19,11 @@
     "@vitejs/plugin-vue": "^6.0.10",
     "@vue/tsconfig": "^0.9.1",
     "typescript": "~6.0.3",
-    "vite": "^8.3.4",
+    "vite": "^5.0.0",
     "vue-tsc": "^3.3.13"
+  },
+  "overrides": {
+    "esbuild": "npm:esbuild-wasm@^0.21.0",
+    "rollup": "npm:@rollup/wasm-node@^4.0.0"
   }
 }
