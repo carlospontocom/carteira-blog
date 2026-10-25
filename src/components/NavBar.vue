@@ -6,7 +6,7 @@ import { RouterLink } from 'vue-router';
 const menu = ref(false);
 
 const items = [
-  { id: 1, url: '#home', label: 'Home' },
+  { id: 1, url: '/', label: 'Home' },
   { id: 2, url: '#services', label: 'Serviços' },
   { id: 3, url: '#porque', label: 'Por que usar?' },
   { id: 4, url: '#contact', label: 'Contatos' },
@@ -43,17 +43,20 @@ const items = [
 
       <ul class="menu" :class="{ aberto: menu }">
         <li v-for="item in items" :key="item.id">
-          <a
-            :href="item.url"
+          <RouterLink
+            :to="item.url"
             class="item-link"
             @click="menu = false"
           >
             {{ item.label }}
-          </a>
+          </RouterLink>
         </li>
 
-        <RouterLink to="/NovoRegistro">Novo Registro</RouterLink>
-
+        <li>
+          <RouterLink to="/novo-registro" class="item-link" @click="menu = false">
+            Novo Registro
+          </RouterLink>
+        </li>
       </ul>
 
     </nav>

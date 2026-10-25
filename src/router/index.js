@@ -1,17 +1,25 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '../views/HomeView.vue';
-import NovoRegistroView from '../views/NovoRegistroView.vue';
+import DefaultLayout from '@/layout/LayoutDefault.vue'; 
+import HomeView from '@/views/HomeView.vue';
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView,
-    },
-    {
-      path: '/NovoRegistro',
-      component: NovoRegistroView
+      component: DefaultLayout, 
+      children: [
+        {
+          path: '', 
+          name: 'home',
+          component: HomeView,
+        },
+        {
+          path: 'novo-registro',
+          name: 'novo-registro',
+          component: () => import('@/views/NovoRegistroView.vue'), 
+        }
+      ]
     }
   ],
 });
