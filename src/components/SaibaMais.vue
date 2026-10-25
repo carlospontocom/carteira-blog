@@ -1,6 +1,6 @@
-
 <script setup>
 import { ref } from 'vue';
+import { enviarEmail } from '@/email/configJSemail';
 
 const modalForm = ref(false);
 
@@ -9,6 +9,8 @@ const email = ref("");
 const telefone = ref("");
 const assunto = ref("");
 const mensagem = ref("");
+
+const enviando = ref(false);
 
 function fecharModalForm() {
   modalForm.value = false;
@@ -20,35 +22,28 @@ function abrirModalForm() {
 
 // Máscara de telefone brasileiro
 function mascararTelefone() {
-  let valor = telefone.value
-    .replace(/\D/g, "")
-    .slice(0, 11);
+  let valor = telefone.value.replace(/\D/g, "").slice(0, 11);
 
   if (valor.length > 10) {
-    // Exemplo: (88) 9.9783-8872
-    valor = valor.replace(
-      /^(\d{2})(\d)(\d{4})(\d{0,4})$/,
-      "($1) $2.$3-$4"
-    );
+    // (99) 9.9999-9999
+    valor = valor.replace(/^(\d{2})(\d)(\d{4})(\d{0,4})$/, "($1) $2.$3-$4");
   } else if (valor.length > 6) {
-    // Exemplo durante a digitação: (88) 99783-887
-    valor = valor.replace(
-      /^(\d{2})(\d{4})(\d{0,4})$/,
-      "($1) $2-$3"
-    );
+    // (99) 9999-9999
+    valor = valor.replace(/^(\d{2})(\d{4})(\d{0,4})$/, "($1) $2-$3");
   } else if (valor.length > 2) {
-    valor = valor.replace(
-      /^(\d{2})(\d+)/,
-      "($1) $2"
-    );
+    // (99) 999...
+    valor = valor.replace(/^(\d{2})(\d{0,5})$/, "($1) $2");
   } else if (valor.length > 0) {
-    valor = valor.replace(/^(\d+)/, "($1");
+    // (9...
+    valor = valor.replace(/^(\d{0,2})$/, "($1");
   }
 
   telefone.value = valor;
 }
 
-function handleSend() {
+async function handleSend() {
+  if (enviando.value) return;
+
   const nomeValor = nome.value.trim();
   const emailValor = email.value.trim();
   const telefoneValor = telefone.value.trim();
@@ -56,60 +51,71 @@ function handleSend() {
   const mensagemValor = mensagem.value.trim();
 
   // Campos obrigatórios
-  if (
-    !nomeValor ||
-    !emailValor ||
-    !telefoneValor ||
-    !assuntoValor ||
-    !mensagemValor
-  ) {
+  if (!nomeValor || !emailValor || !telefoneValor || !assuntoValor || !mensagemValor) {
     alert("Todos os campos são obrigatórios!");
     return;
   }
 
-  // Nome: mínimo de 10 caracteres
-  if (nomeValor.length < 10) {
-    alert("O nome deve ter no mínimo 10 caracteres!");
+  // Nome: mínimo 3 caracteres (evita bloquear nomes curtos)
+  if (nomeValor.length < 3) {
+    alert("Digite seu nome completo!");
     return;
   }
 
-  // E-mail: mínimo de 10 caracteres
-  if (emailValor.length < 10) {
-    alert("O e-mail deve ter no mínimo 10 caracteres!");
-    return;
-  }
-
-  // Formato do e-mail
+  // E-mail: formato válido (a regex já cobre tamanho mínimo real)
   const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
   if (!emailValido.test(emailValor)) {
     alert("Digite um e-mail válido!");
     return;
   }
 
-  // Telefone: deve conter 11 dígitos
+  // Telefone: 11 dígitos (DDD + 9 dígitos)
   const telefoneNumeros = telefoneValor.replace(/\D/g, "");
-
   if (telefoneNumeros.length !== 11) {
     alert("Digite um telefone válido com DDD!");
     return;
   }
 
-  // Assunto: mínimo de 6 caracteres
+  // Assunto: mínimo 6 caracteres
   if (assuntoValor.length < 6) {
     alert("O assunto deve ter no mínimo 6 caracteres!");
     return;
   }
 
-  // Mensagem: mínimo de 20 caracteres
+  // Mensagem: mínimo 20 caracteres
   if (mensagemValor.length < 20) {
     alert("A mensagem deve ter no mínimo 20 caracteres!");
     return;
   }
 
-  alert("Formulário preenchido corretamente!");
+  const dados = {
+    nome: nomeValor,
+    email: emailValor,
+    telefone: telefoneValor,
+    assunto: assuntoValor,
+    mensagem: mensagemValor,
+  };
 
-  fecharModalForm();
+  try {
+    enviando.value = true;
+
+    await enviarEmail(dados);
+
+    alert("E-mail enviado com sucesso!");
+
+    fecharModalForm();
+
+    nome.value = "";
+    email.value = "";
+    telefone.value = "";
+    assunto.value = "";
+    mensagem.value = "";
+  } catch (erro) {
+    console.error("Erro ao enviar e-mail:", erro);
+    alert("Não foi possível enviar o e-mail. Verifique sua conexão e tente novamente.");
+  } finally {
+    enviando.value = false;
+  }
 }
 </script>
 

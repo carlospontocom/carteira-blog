@@ -1,6 +1,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import { RouterLink } from 'vue-router';
 
 const menu = ref(false);
 
@@ -50,6 +51,9 @@ const items = [
             {{ item.label }}
           </a>
         </li>
+
+        <RouterLink to="/NovoRegistro">Novo Registro</RouterLink>
+
       </ul>
 
     </nav>
