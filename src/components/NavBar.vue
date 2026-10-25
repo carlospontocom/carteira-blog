@@ -57,12 +57,6 @@ const items = [
 </template>
 
 <style>
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-}
 
 li {
   list-style: none;
@@ -70,7 +64,7 @@ li {
 
 .header {
   box-shadow: 0 0 5px #00000040;
-  padding: 8px 0;
+  padding: 1rem;
   position: fixed;
   top: 0;
   left: 0;
@@ -78,12 +72,7 @@ li {
   background-color: white;
   width: 100%;
 }
-
-.container {
-  max-width: 992px;
-  margin: 0 auto;
-}
-
+ 
 .navbar {
   display: flex;
   align-items: center;
