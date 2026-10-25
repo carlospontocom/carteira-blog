@@ -152,7 +152,7 @@ function handleSend() {
 .window-form {
   background-color: azure;
   position: fixed;
-  top: 1rem;
+  top: 3rem;
   height: 100vh;
   width: 100%;
   padding: 3rem 1rem 1rem 1rem;
@@ -195,7 +195,7 @@ function handleSend() {
   width: 100%;
   margin: 0 auto;
   overflow-y: auto;
-  height: 240px;
+  height: 320px;
 }
 
 .form input,
